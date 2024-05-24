@@ -2,6 +2,7 @@ var socket;
 var App = {
   currentSong: null,
   username: null,
+  score:0,
 
   init: function() {
     socket = io.connect("http://" + location.hostname + ":" + location.port);
@@ -38,6 +39,13 @@ var App = {
         App.onRight();
       } else {
         App.onWrong();
+      }
+    App.showScore()
+    });
+
+    socket.on("score", function(data) {
+      if (data) {
+        App.score = data.score;
       }
     });
 
@@ -80,6 +88,10 @@ var App = {
         "</li>";
     }
     $("#suggestions").html("<ul>" + out + "</ul>");
+  },
+
+  showScore: function() {
+    $("#score").html("<h3>You have " + App.score + " points.</h3>");
   }
 };
 $(function() {
