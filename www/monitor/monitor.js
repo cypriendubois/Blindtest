@@ -37,6 +37,7 @@ var App = {
       App.audio.stop();
     }
     $("#suggestions").html("");
+    App.hideBuzzer();
     App.hideHint();
     App.hideAnswer();
     App.hideWinner();
@@ -154,6 +155,15 @@ var App = {
     App.audio.play();
   },
 
+  showBuzzingPlayer: function(player) {
+    $("#buzzing-player").text(player);
+    $("#buzzer").show();
+    console.log("Trying to show buzzing player " + player)
+  },
+  hideBuzzer: function() {
+    $("#buzzer").hide();
+  },
+
   showWinner: function(winner) {
     App.winner = winner;
     $("#winner-name").text(winner);
@@ -223,6 +233,16 @@ $(function() {
     socket.emit("start", {});
   });
 
+  $("#response-button").on("click", function(e) {
+    if ($(e.target).attr("data-value")) {
+      clearTimeout(this.buzzerTimeoutId);
+      var value = $(e.target).attr("data-value");
+      socket.emit("buzzerDecision", {
+        buzzerDecision: value
+      });
+    }
+  });
+
   socket.on("users", function(data) {
     var users = data.users;
     var out = "";
@@ -254,5 +274,20 @@ $(function() {
   });
   socket.on("winner", function(winner) {
     App.showWinner(winner);
+  });
+
+  socket.on("buzz", function(buzz){
+    this.buzzerTimeoutId = setTimeout(() => {
+      socket.emit("answerTimeout", {user : buzz.player, song: buzz.song});
+    }, 10000);
+    App.hideHint();
+    App.audio.pause();
+    console.log('Pausing game...');
+    App.showBuzzingPlayer(buzz.player);
+  })
+
+  socket.on("resume", function(song) {
+    //Hide intro
+    App.audio.play();
   });
 });
