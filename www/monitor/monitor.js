@@ -231,6 +231,7 @@ $(function() {
 
   $("#start").on("click", function() {
     socket.emit("start", {});
+    $("#next-button").show();
   });
 
   $("#response-button").on("click", function(e) {
@@ -241,6 +242,11 @@ $(function() {
         buzzerDecision: value
       });
     }
+  });
+
+  $("#next-button").on("click", function(e) {
+    console.log("Next button clicked")
+    socket.emit("next");
   });
 
   socket.on("users", function(data) {
@@ -255,6 +261,7 @@ $(function() {
         out += "<li>" + users[i].username + " (ready)" + "</li>";
       }
     }
+    $("#header").show()
     $("#players").html(out);
   });
   socket.on("song", function(song) {
