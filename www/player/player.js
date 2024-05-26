@@ -79,14 +79,15 @@ var App = {
 
   showSuggestions: function() {
     var out = "";
-    for (var i = 0, l = App.currentSong.suggestions.length; i < l; i++) {
-      out +=
-        '<li data-value="' +
-        i +
-        '">' +
-        App.currentSong.suggestions[i].name +
-        "</li>";
-    }
+    // for (var i = 0, l = App.currentSong.suggestions.length; i < l; i++) {
+    //   out +=
+    //     '<li data-value="' +
+    //     i +
+    //     '">' +
+    //     App.currentSong.suggestions[i].name +
+    //     "</li>";
+    // }
+    out += '<li data-value="-1">Buzz</li>'
     $("#suggestions").html("<ul>" + out + "</ul>");
   },
 

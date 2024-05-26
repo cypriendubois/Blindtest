@@ -6,18 +6,32 @@ body {
   margin: 0;
   padding: 0;
 }
+/* Header
+******************************************************/
+#header {
+  background: #000;
+  color:#fff;
+  padding: 12px;
+  font-size: 1.25em;
+  display: none;
+}
 
 /* Players
 ******************************************************/
 #players {
-  background: #000;
-  color: #fff;
-  padding: 12px;
-  font-size: 1.25em;
+  display: inline-block;
 }
 #players li {
   display: inline-block;
   margin-right: 1em;
+}
+
+/* Next song button
+******************************************************/
+#next-button {
+  display: none;
+  float: right;
+  cursor: pointer;
 }
 
 /* Intro
@@ -125,17 +139,6 @@ body {
 #winner {
   background: #f60;
 }
-
-/* Next
-******************************************************/
-#next {
-  display: inline-block;
-  padding: 8px 12px;
-  border-radius: 24px;
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  cursor: pointer;
-  background: #000;
-  color: #fff;
+#buzzer {
+  display: none;
 }
