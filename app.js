@@ -14,6 +14,6 @@ app.get("/spectate", function(req, res) {
   res.redirect("/monitor/index.html");
 });
 
-Game.init(io);
+Game.init(io, '12752161881');
 server.listen(PORT);
 console.log(`Monitor: http://localhost:${PORT}/monitor`);
