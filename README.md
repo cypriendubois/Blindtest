@@ -1,33 +1,43 @@
 Blindtest
 =========
 
-Blindtest is a multiplayer musical game (up to 16 simultaneous players). This is a very early version and surely contains bugs.
-
-This project was initially made for the BeMyApp Deezer contest (48h hackathon).
+Blindtest is a multiplayer musical game (up to 16 simultaneous players).
+This project is forked from [https://github.com/mauricesvay/Blindtest](https://github.com/mauricesvay/Blindtest) and builds upon its base functionalities.
 
 Gameplay
 --------
-* The main screen plays a 30sec audio sample of a random song
-* 4 possible answers are displayed
-* with their mobile phone, players have to guess who is the singer of the song
+* The players chose a Deezer playlist, and 30 of its songs are chosen randomly.
+* The main screen plays a 30sec audio sample of the first song in the game playlist.
+* with their mobile phone, players have to buzz to stop the audi playback, and guess who is the singer of the song
+* Players have to guess the 30 songs, and the player who guessed the most wins
 
 Installing
 ----------
-* Get the source `git clone git://github.com/mauricesvay/Blindtest.git`
+* Get the source `git clone https://github.com/cypriendubois/Blindtest.git`
 * `cd Blindtest`
 * Install dependencies (socket.io, express, sqlite3) with `npm install .`
 
 Starting the game
 -----------------
 * `node app.js`
-* open `http://localhost:8080/spectate` in your browser. It is now the main screen.
+* open `http://localhost:8080/monitor` in your browser. It is now the main screen.
 * each player can now join the game at `http://MAIN_SCREEN_IP_ADDRESS:8080/`
 * when all players are ready, you can start the game on the main screen. 
 
 TODO
 ----
-* ~~Start a new round when a round is finished (so you don't have to restart the app)~~
-* ~~Let users join anytime~~
+* Sugegst initial URL - may not be relevant
+* Allow in-game join/re-join
+* Allow game restart after 30 rounds
+* Improve scores live update on monitor
+* Playlist URL check before game can start
+* Buzzer queue (needed ?)
+* Progress bar for round
+* Leaderboard at the end of the game
+* CSS aesthetic work
+
+TODO - Original repo
+----
 * Let users create "rooms"
 * Let users login with a FB or Twitter account
 * Let users select a playlist to choose songs from
@@ -39,7 +49,7 @@ TODO
 Technical details
 -----------------
 * Audio samples and tracks info come from Deezer API
-* Songs are picked randomly among french charts (1956-2012)
+* Songs are picked from user provided Deezer playlists
 * Real time connection is made with socket.io
 * The app has been tested on a Mac (server), iPhone (client), iPad (client) and is known for working on some Android devices (client).
 
@@ -50,7 +60,6 @@ License
   * Zepto.js: [http://zeptojs.com/license](http://zeptojs.com/license)
   * jQuery: [http://jquery.org/license](http://jquery.org/license)
   * animate.css: [http://daneden.me/animate/](http://daneden.me/animate/)
-  * Montserrat font: [http://www.google.com/webfonts/specimen/Montserrat](http://www.google.com/webfonts/specimen/Montserrat)
 
 This app is under the BSD license:
 

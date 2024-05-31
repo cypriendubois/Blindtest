@@ -4,7 +4,7 @@ var App = {
   timestamp: 0,
   pause: 5 * 1000,
   roundPause: 10 * 1000,
-  timerPlaceholder: "♫",
+  timerPlaceholder: "",
 
   init: function() {
     var url = window.location + "";
@@ -16,7 +16,7 @@ var App = {
     //     socket.emit('next');
     // });
     if (!soundManager.usePeakData) {
-      App.timerPlaceholder = "▶";
+      App.timerPlaceholder = "";
       $("#timer").on("click", function() {
         App.audio.play("preview");
       });
@@ -38,7 +38,6 @@ var App = {
     }
     $("#suggestions").html("");
     App.hideBuzzer();
-    App.hideHint();
     App.hideAnswer();
     App.hideWinner();
     App.initTimer();
@@ -46,45 +45,13 @@ var App = {
   },
 
   play: function() {
-    App.showSuggestions();
     App.playPreview();
   },
 
-  showSuggestions: function() {
-    var out = "";
-    $.each(App.currentSong.suggestions, function(index, value) {
-      out += '<li data-answer="' + value.answer + '">' + value.name + "</li>";
-    });
-    $("#suggestions").html(out);
-    $("#suggestions li").addClass("flipInX");
-  },
-  showHint: function() {
-    if ($("#answer").is(":visible")) {
-      return;
-    }
-
-    if ($("#winner").is(":visible")) {
-      return;
-    }
-
-    $("#hint").text(App.currentSong.year);
-    $("#hint").removeClass("fadeOutDown");
-    $("#hint").addClass("fadeInUp");
-    $("#hint").show();
-  },
-  hideHint: function() {
-    $("#hint").removeClass("fadeInUp");
-    $("#hint").addClass("fadeOutDown");
-    setTimeout(function() {
-      $("#hint").hide();
-    }, 450);
-  },
   showAnswer: function(username) {
     if ($("#winner").is(":visible")) {
       return;
     }
-
-    App.hideHint();
 
     if (typeof username !== "undefined") {
       $("#player-right span").text(username);
@@ -95,7 +62,7 @@ var App = {
       $("#answer").addClass("no-winner");
     }
 
-    $("#timer").text("➜");
+    $("#timer").text("");
     $("#answer").addClass("fadeInUp");
     $("#answer").show();
     $("#suggestions [data-answer=false]").addClass("wrong");
@@ -116,18 +83,12 @@ var App = {
   },
   playPreview: function() {
     $(".artist").text(App.currentSong.artist.name);
-    $(".title").text(App.currentSong.title + " (" + App.currentSong.year + ")");
+    $(".title").text(App.currentSong.title);
     soundManager.destroySound("preview");
-    App.audio = soundManager.createSound({
+        App.audio = soundManager.createSound({
       id: "preview",
       url: App.currentSong.preview,
       onload: function() {
-        var timestamp = Math.round(App.audio.duration / 3);
-        App.audio.onPosition(timestamp, App.showHint);
-
-        timestamp = Math.round((App.audio.duration * 2) / 3);
-        App.audio.onPosition(timestamp, App.hideHint);
-
         timestamp = Math.floor(App.audio.duration - 5000);
         App.audio.onPosition(timestamp, App.timerNearEnd);
       },
@@ -137,7 +98,7 @@ var App = {
         App.timestamp = Math.floor(
           (App.audio.durationEstimate - App.audio.position) / 1000
         );
-        $("#timer").text(App.timestamp);
+        $("#timer").text(App.timestamp||30);
         if (soundManager.usePeakData) {
           mean = App.audio.peakData.left + App.audio.peakData.right / 2;
         }
@@ -228,9 +189,14 @@ $(function() {
   socket = io.connect("http://" + location.hostname + ":" + location.port);
 
   socket.emit("spectate", {});
+  $("#loadPlaylist").on("click", function() {
+    socket.emit("loadPlaylist", {
+      playlistUrl: $("#playlistUrl").val()
+    });
+  });
 
   $("#start").on("click", function() {
-    socket.emit("start", {});
+    socket.emit("start");
     $("#next-button").show();
   });
 
@@ -249,10 +215,13 @@ $(function() {
     socket.emit("next");
   });
 
+  socket.on("playlistLoaded", function(){
+    document.getElementById("start").disabled = false;
+  });
+
   socket.on("users", function(data) {
     var users = data.users;
     var out = "";
-    // var out = '<li>' + ((users.length == 1) ? '1 joueur' : users.length + ' joueurs') + '</li>';
     for (var i = 0, l = users.length; i < l; i++) {
       if (users[i].hasJoined) {
         out +=
@@ -284,10 +253,6 @@ $(function() {
   });
 
   socket.on("buzz", function(buzz){
-    this.buzzerTimeoutId = setTimeout(() => {
-      socket.emit("answerTimeout", {user : buzz.player, song: buzz.song});
-    }, 10000);
-    App.hideHint();
     App.audio.pause();
     console.log('Pausing game...');
     App.showBuzzingPlayer(buzz.player);
@@ -295,6 +260,6 @@ $(function() {
 
   socket.on("resume", function(song) {
     //Hide intro
-    App.audio.play();
+    App.audio.resume();
   });
 });
