@@ -4,7 +4,7 @@ var App = {
   timestamp: 0,
   pause: 5 * 1000,
   roundPause: 10 * 1000,
-  timerPlaceholder: "♫",
+  timerPlaceholder: "",
 
   init: function() {
     var url = window.location + "";
@@ -16,7 +16,7 @@ var App = {
     //     socket.emit('next');
     // });
     if (!soundManager.usePeakData) {
-      App.timerPlaceholder = "▶";
+      App.timerPlaceholder = "";
       $("#timer").on("click", function() {
         App.audio.play("preview");
       });
@@ -62,7 +62,7 @@ var App = {
       $("#answer").addClass("no-winner");
     }
 
-    $("#timer").text("➜");
+    $("#timer").text("");
     $("#answer").addClass("fadeInUp");
     $("#answer").show();
     $("#suggestions [data-answer=false]").addClass("wrong");
@@ -85,7 +85,7 @@ var App = {
     $(".artist").text(App.currentSong.artist.name);
     $(".title").text(App.currentSong.title);
     soundManager.destroySound("preview");
-    App.audio = soundManager.createSound({
+        App.audio = soundManager.createSound({
       id: "preview",
       url: App.currentSong.preview,
       onload: function() {
@@ -98,7 +98,7 @@ var App = {
         App.timestamp = Math.floor(
           (App.audio.durationEstimate - App.audio.position) / 1000
         );
-        $("#timer").text(App.timestamp);
+        $("#timer").text(App.timestamp||30);
         if (soundManager.usePeakData) {
           mean = App.audio.peakData.left + App.audio.peakData.right / 2;
         }
@@ -189,11 +189,14 @@ $(function() {
   socket = io.connect("http://" + location.hostname + ":" + location.port);
 
   socket.emit("spectate", {});
-
-  $("#start").on("click", function() {
-    socket.emit("start", {
+  $("#loadPlaylist").on("click", function() {
+    socket.emit("loadPlaylist", {
       playlistUrl: $("#playlistUrl").val()
     });
+  });
+
+  $("#start").on("click", function() {
+    socket.emit("start");
     $("#next-button").show();
   });
 
@@ -212,10 +215,13 @@ $(function() {
     socket.emit("next");
   });
 
+  socket.on("playlistLoaded", function(){
+    document.getElementById("start").disabled = false;
+  });
+
   socket.on("users", function(data) {
     var users = data.users;
     var out = "";
-    // var out = '<li>' + ((users.length == 1) ? '1 joueur' : users.length + ' joueurs') + '</li>';
     for (var i = 0, l = users.length; i < l; i++) {
       if (users[i].hasJoined) {
         out +=

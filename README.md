@@ -26,6 +26,18 @@ Starting the game
 
 TODO
 ----
+* Sugegst initial URL - may not be relevant
+* Allow in-game join/re-join
+* Allow game restart after 30 rounds
+* Improve scores live update on monitor
+* Playlist URL check before game can start
+* Buzzer queue (needed ?)
+* Progress bar for round
+* Leaderboard at the end of the game
+* CSS aesthetic work
+
+TODO - Original repo
+----
 * Let users create "rooms"
 * Let users login with a FB or Twitter account
 * Let users select a playlist to choose songs from
@@ -48,7 +60,6 @@ License
   * Zepto.js: [http://zeptojs.com/license](http://zeptojs.com/license)
   * jQuery: [http://jquery.org/license](http://jquery.org/license)
   * animate.css: [http://daneden.me/animate/](http://daneden.me/animate/)
-  * Montserrat font: [http://www.google.com/webfonts/specimen/Montserrat](http://www.google.com/webfonts/specimen/Montserrat)
 
 This app is under the BSD license:
 
