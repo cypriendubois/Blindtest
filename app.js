@@ -14,6 +14,6 @@ app.get("/spectate", function(req, res) {
   res.redirect("/monitor/index.html");
 });
 
-Game.init(io, '12752161881');
+Game.init(io, 'https://www.deezer.com/fr/playlist/3110419842');
 server.listen(PORT);
 console.log(`Monitor: http://localhost:${PORT}/monitor`);
