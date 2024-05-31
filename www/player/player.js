@@ -3,6 +3,7 @@ var App = {
   currentSong: null,
   username: null,
   score:0,
+  timerInterval:null,
 
   init: function() {
     socket = io.connect("http://" + location.hostname + ":" + location.port);
@@ -33,14 +34,20 @@ var App = {
       App.onSong(song);
       // }
     });
-
     socket.on("answer", function(data) {
       if (data && data.username === App.username) {
         App.onRight();
       } else {
         App.onWrong();
       }
-    App.showScore()
+      App.stopTimer();
+      App.showScore();
+    });
+
+    socket.on("startTimer", function(data) {
+      if (data.username === App.username) {
+        App.startTimer();
+      }
     });
 
     socket.on("score", function(data) {
@@ -56,22 +63,42 @@ var App = {
       if ($(e.target).attr("data-value")) {
         var value = $(e.target).attr("data-value");
         socket.emit("button", {
-          button: value
+          button: value,
+          username: App.username,
         });
       }
     });
   },
+
 
   onSong: function(song) {
     App.currentSong = song.song;
     App.showSuggestions();
   },
 
+  startTimer: function() {
+    const timerDisplay = document.getElementById('timerDisplay');
+    timerDisplay.style.display = 'block';
+    var time = 10;
+    App.timerInterval = setInterval(() => {
+      time--;
+      timerDisplay.textContent = `${time.toString().padStart(2, '0')}`;
+      if (time == 0) {
+        socket.emit("answerTimeout", {user : App.username})
+      }
+    }, 1000);
+  },
+  
+  stopTimer: function() {
+    const timerDisplay = document.getElementById('timerDisplay');
+    clearInterval(App.timerInterval);
+    timerDisplay.textContent = '10';
+    timerDisplay.style.display = 'none';
+  },
+
   onRight: function() {
     $("#suggestions").html("<span class='right'>✅</span>");
   },
-
-  //@TODO : add case when other user is right onOtherRight
 
   onWrong: function() {
     $("#suggestions").html("<span class='wrong'>❌</span>");
@@ -79,14 +106,6 @@ var App = {
 
   showSuggestions: function() {
     var out = "";
-    // for (var i = 0, l = App.currentSong.suggestions.length; i < l; i++) {
-    //   out +=
-    //     '<li data-value="' +
-    //     i +
-    //     '">' +
-    //     App.currentSong.suggestions[i].name +
-    //     "</li>";
-    // }
     out += '<li data-value="-1">Buzz</li>'
     $("#suggestions").html("<ul>" + out + "</ul>");
   },

@@ -16,6 +16,8 @@ body {
     font-size: 1.25em;
     padding: 4px;
   }
+  #timerDisplay {
+    display: none;  }
   #suggestions {
     padding: 0 12px;
     text-align: center;
