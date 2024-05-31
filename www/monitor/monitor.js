@@ -230,7 +230,9 @@ $(function() {
   socket.emit("spectate", {});
 
   $("#start").on("click", function() {
-    socket.emit("start", {});
+    socket.emit("start", {
+      playlistUrl: $("#playlistUrl").val()
+    });
     $("#next-button").show();
   });
 
