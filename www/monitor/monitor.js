@@ -38,7 +38,6 @@ var App = {
     }
     $("#suggestions").html("");
     App.hideBuzzer();
-    App.hideHint();
     App.hideAnswer();
     App.hideWinner();
     App.initTimer();
@@ -46,45 +45,13 @@ var App = {
   },
 
   play: function() {
-    App.showSuggestions();
     App.playPreview();
   },
 
-  showSuggestions: function() {
-    var out = "";
-    $.each(App.currentSong.suggestions, function(index, value) {
-      out += '<li data-answer="' + value.answer + '">' + value.name + "</li>";
-    });
-    $("#suggestions").html(out);
-    $("#suggestions li").addClass("flipInX");
-  },
-  showHint: function() {
-    if ($("#answer").is(":visible")) {
-      return;
-    }
-
-    if ($("#winner").is(":visible")) {
-      return;
-    }
-
-    $("#hint").text(App.currentSong.year);
-    $("#hint").removeClass("fadeOutDown");
-    $("#hint").addClass("fadeInUp");
-    $("#hint").show();
-  },
-  hideHint: function() {
-    $("#hint").removeClass("fadeInUp");
-    $("#hint").addClass("fadeOutDown");
-    setTimeout(function() {
-      $("#hint").hide();
-    }, 450);
-  },
   showAnswer: function(username) {
     if ($("#winner").is(":visible")) {
       return;
     }
-
-    App.hideHint();
 
     if (typeof username !== "undefined") {
       $("#player-right span").text(username);
@@ -116,18 +83,12 @@ var App = {
   },
   playPreview: function() {
     $(".artist").text(App.currentSong.artist.name);
-    $(".title").text(App.currentSong.title + " (" + App.currentSong.year + ")");
+    $(".title").text(App.currentSong.title);
     soundManager.destroySound("preview");
     App.audio = soundManager.createSound({
       id: "preview",
       url: App.currentSong.preview,
       onload: function() {
-        var timestamp = Math.round(App.audio.duration / 3);
-        App.audio.onPosition(timestamp, App.showHint);
-
-        timestamp = Math.round((App.audio.duration * 2) / 3);
-        App.audio.onPosition(timestamp, App.hideHint);
-
         timestamp = Math.floor(App.audio.duration - 5000);
         App.audio.onPosition(timestamp, App.timerNearEnd);
       },
@@ -286,10 +247,6 @@ $(function() {
   });
 
   socket.on("buzz", function(buzz){
-    this.buzzerTimeoutId = setTimeout(() => {
-      socket.emit("answerTimeout", {user : buzz.player, song: buzz.song});
-    }, 10000);
-    App.hideHint();
     App.audio.pause();
     console.log('Pausing game...');
     App.showBuzzingPlayer(buzz.player);
@@ -297,6 +254,6 @@ $(function() {
 
   socket.on("resume", function(song) {
     //Hide intro
-    App.audio.play();
+    App.audio.resume();
   });
 });
