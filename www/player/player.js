@@ -7,6 +7,7 @@ var App = {
 
   init: function() {
     socket = io.connect("http://" + location.hostname + ":" + location.port);
+    document.getElementById('game').style.display = 'none';
 
     //Login
     $("form").on("submit", function(e) {
@@ -20,7 +21,8 @@ var App = {
     });
 
     socket.on("login", function() {
-      $("form").hide();
+      document.getElementById('game').style.display = 'contents';
+      document.getElementById('login').style.display = 'none';
       $("#suggestions").html('<span class="wait">Ready for next round</span>');
     });
 
@@ -34,6 +36,7 @@ var App = {
       App.onSong(song);
       // }
     });
+
     socket.on("answer", function(data) {
       if (data && data.username === App.username) {
         App.onRight();
@@ -70,7 +73,6 @@ var App = {
     });
   },
 
-
   onSong: function(song) {
     App.currentSong = song.song;
     App.showSuggestions();
@@ -97,17 +99,17 @@ var App = {
   },
 
   onRight: function() {
-    $("#suggestions").html("<span class='right'>✅</span>");
+    $("#suggestions").html("<span style='font-size:5rem;'>✅</span>");
   },
 
   onWrong: function() {
-    $("#suggestions").html("<span class='wrong'>❌</span>");
+    $("#suggestions").html("<span>❌</span>");
   },
 
   showSuggestions: function() {
     var out = "";
-    out += '<li data-value="-1">Buzz</li>'
-    $("#suggestions").html("<ul>" + out + "</ul>");
+    out += '<li data-value="-1"></li>'
+    $("#suggestions").html("<ul class='buzzer'>" + out + "</ul>");
   },
 
   showScore: function() {

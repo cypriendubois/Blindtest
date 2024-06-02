@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Player</title>
     <meta
       name="viewport"
@@ -22,7 +22,7 @@
             name="nickname"
             id="nickname"
           />
-          <input type="submit" value="Connect" />
+          <input type="submit" value="Connect" style="text-align: center;"/>
         </div>
       </form>
     </div>
@@ -30,8 +30,8 @@
     <div id="game">
       <div id="username"></div>
       <div id="suggestions"></div>
-      <p id="timerDisplay">10</p>
-      <div id="score"></div>
+      <!--<p id="timerDisplay">10</p>
+      <div id="score"></div>-->
     </div>
 
     <script src="/socket.io/socket.io.js"></script>

@@ -1,48 +1,83 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  background-color: #627C95;
+}
+
+form {
+  color: #ffffff;
+  font-size: 3em;
+  display: flex;
+  margin: -1em;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+  
+form input {
+  border: 3px solid #000;
+  border-radius: 5px;
+  height: 50px;
+  line-height: normal;
+  color: #282828;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  user-select: auto;
+  font-size: 16px;
+  text-align: center;
+  margin: 10px;
+  :focus{
+    border: 3px solid #5551ff;
   }
-  form,
-  #username {
-    background: #000;
-    color: #fff;
-    text-align: center;
-    margin: 0;
-    padding: 12px;
-    font-size: 1.25em;
-  }
-  form input {
-    font-size: 1.25em;
-    padding: 4px;
-  }
-  #timerDisplay {
-    display: none;  }
-  #suggestions {
-    padding: 0 12px;
-    text-align: center;
-  }
-  #suggestions ul {
-    padding: 0;
-  }
-  #suggestions li {
-    margin: 12px 0;
-    display: block;
-    background: #000;
-    color: #fff;
-    padding: 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 24px;
-  }
-  .right {
-    font-size: 72px;
-    color: #66cc00;
-  }
-  .wrong {
-    font-size: 72px;
-    color: #cc3300;
-  }
-  .wait {
-    color: #000;
-  }
+}
+
+form input::placeholder {
+  text-align: center;
+}
+ 
+#timerDisplay {
+  display: none;  
+}
+
+#game{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+#username {
+  color: #ffffff;
+  font-size: 3em;
+  background-color: black;
+  flex: 0;
+}
+
+#suggestions {
+  align-items: center;
+  justify-content: center;
+}
+
+#suggestions span{ 
+  font-size: 24px;
+}
+  
+.buzzer {
+  display: inline-block;
+  padding: 0;
+  margin: 40vmin 0;
+  list-style: none;
+}
+
+#suggestions li {
+  background: #ff0000;
+  height: 300px;
+  width: 300px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.wait {
+  color: #000;
+}  
