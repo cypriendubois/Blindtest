@@ -1,4 +1,4 @@
-const Game = require("./lib/Game");
+const Game = require("./backend/Game");
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
@@ -6,7 +6,7 @@ const io = require("socket.io")(server);
 
 const PORT = process.env.PORT || 8080;
 
-app.use(express.static("www"));
+app.use(express.static("frontend/public"));
 app.get("/", function(req, res) {
   res.redirect("/player/index.html");
 });
