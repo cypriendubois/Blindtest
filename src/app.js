@@ -1,19 +1,33 @@
-const Game = require("./lib/Game");
+const Game = require("../server/lib/Game");
 const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
+
 const app = express();
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+const server = http.createServer(app);
+const io = socketIo(server);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.static("frontend/public"));
-app.get("/", function(req, res) {
-  res.redirect("/player/index.html");
+app.use(express.static("public"));
+
+app.get("/", function(_req, res) {
+  res.sendFile(__dirname + "/public/index.html");
 });
-app.get("/spectate", function(req, res) {
+
+app.get("/about", function(_req, res) {
+  res.sendFile(__dirname + "/public/about.html");
+});
+
+app.get("/spectate", function(_req, res) {
   res.redirect("/monitor/index.html");
 });
 
-Game.init(io, 'https://www.deezer.com/fr/playlist/3110419842');
-server.listen(PORT);
-console.log(`Monitor: http://localhost:${PORT}/monitor`);
+Game.init(io);
+
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT
+    
+  }`);
+  console.log(`Monitor: http://localhost:${PORT}/monitor`);
+});
