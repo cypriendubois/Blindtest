@@ -19,7 +19,7 @@ Installing
 
 Starting the game
 -----------------
-* `node app.js`
+* `npm start`
 * open `http://localhost:8080/monitor` in your browser. It is now the main screen.
 * each player can now join the game at `http://MAIN_SCREEN_IP_ADDRESS:8080/`
 * when all players are ready, you can start the game on the main screen. 
