@@ -1,4 +1,4 @@
-const Game = require("./backend/Game");
+const Game = require("./lib/Game");
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
