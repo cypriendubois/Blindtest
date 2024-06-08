@@ -5,14 +5,14 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import socket from '../../services/socket';
-import handleSocketEvents from '../../services/socketEvents';
+import {handleSocketEventsPlaylistLoader} from '../../services/socketEvents';
 
 const PlaylistLoader = () => {
   const [playlistUrl, setPlaylistUrl] = useState('https://deezer.page.link/jgWCyForWLp2M8687');
   const [playlistLoaded, setPlaylistLoaded] = useState(false);
 
   useEffect(() => {
-    handleSocketEvents(setPlaylistLoaded);
+    handleSocketEventsPlaylistLoader(setPlaylistLoaded);
     // Emit an event when the component loads
     console.log('Monitor loaded, emitting event');
     socket.emit('spectate');

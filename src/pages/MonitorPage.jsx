@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import PlaylistLoader from '../components/monitor/PlaylistLoader';
 import GameScreen from '../components/monitor/GameScreen';
 import socket from '../services/socket';
-import handleSocketEvents from '../services/socketEvents';
+import {handleSocketEventsInGame} from '../services/socketEvents';
 
 const MonitorPage = () => {
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
-    handleSocketEvents(setGameStarted);
+    handleSocketEventsInGame(setGameStarted);
 
     return () => {
-      socket.off('startGame')
+      socket.off('startGame');
+      setGameStarted(false);
     };
   }, []);
 

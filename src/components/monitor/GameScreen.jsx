@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import socket from '../../services/socket';
-import handleSocketEvents from '../../services/socketEvents';
+
 import logo from '../../assets/pedro.gif';
+import AudioPlayer from './AudioPlayer';
+import BuzzerHandler from './BuzzerHandler'
 
 const GameScreen = () => {
-return (
+  return (
     <Container>
       <Row>
         <Col className="text-center">
@@ -16,11 +18,13 @@ return (
       </Row>
       <Row>
         <Col className="text-center">
-            <img src={logo} alt="Pedro"/>
+          <img src={logo} alt="Pedro" />
         </Col>
       </Row>
-      </Container>
-    );
+      <AudioPlayer/>
+      <BuzzerHandler/>
+    </Container>
+  );
 };
 
 export default GameScreen;
