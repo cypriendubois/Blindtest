@@ -20,6 +20,7 @@ User.prototype.bindEvents = function() {
     const username = sanitizer.escape(data.username);
     self.username = username;
     self.socket.emit("login");
+    self.socket.join("players");
     self.game.updatePlayers();
     console.log(">>> " + username);
   });
@@ -35,8 +36,10 @@ User.prototype.bindEvents = function() {
     self.game.updatePlayers();
   });
 
-  this.socket.on("loadPlaylist", function(data) {
-    self.game.loadPlaylist(data.playlistUrl);
+  this.socket.on("loadPlaylist", async (data) => {
+    console.log(data);
+    await self.game.loadPlaylist(data.playlistUrl);
+    self.socket.emit("playlistLoaded");
   });
 
   this.socket.on("start", function() {

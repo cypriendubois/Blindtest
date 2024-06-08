@@ -1,21 +1,21 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Monitor from './components/Monitor';
-import Player from './components/Player';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import MonitorPage from './pages/MonitorPage';
+import PlayerPage from './pages/PlayerPage';
+import Navbar from './components/Navbar';
 
 const App = () => {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Monitor />} />
-        <Route path="/player" element={<Player />} />
-      </Routes>
-      <nav>
-        <ul>
-          <li><Link to="/">Monitor</Link></li>
-          <li><Link to="/player">Player</Link></li>
-        </ul>
-      </nav>
+      <div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/monito" element={<MonitorPage />} />
+          <Route path="/player" element={<PlayerPage />} />
+        </Routes>
+      </div>
     </Router>
   );
 };

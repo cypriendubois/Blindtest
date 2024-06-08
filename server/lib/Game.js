@@ -56,7 +56,7 @@ const Game = {
       const ids = await songUtils.getPlaylistFromURL(playlistUrl, Game.MAX_SONGS);
       if (ids && ids.length > 0) {
         Game.song_id_list = ids;
-        Game.io.sockets.in("game").emit("playlistLoaded");
+        return
       } else {
         console.error("Failed to get playlist from URL:", playlistUrl);
       }
@@ -69,6 +69,7 @@ const Game = {
   newRound() {
     console.log("=================================================");
     console.log("New round!");
+    Game.io.sockets.in("game").emit("startGame");
     for (let i = 0; i < Game.users.length; i++) {
       Game.users[i].resetScore();
       Game.users[i].join();
