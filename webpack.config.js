@@ -47,10 +47,20 @@ module.exports = {
     port: 8080,
     proxy: [
       {
-        context: ['/socket.io', '/api'],
+        context: ['/api', '/socket.io'],
         target: 'http://localhost:3000',
+        changeOrigin: true,
         ws: true,
       },
+      {
+        context: ['/'],
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        pathRewrite: { '^/': '/' },
+      }
     ],
+  },
+  performance: {
+    hints: false, // Disable performance hints
   },
 };
