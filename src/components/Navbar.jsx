@@ -8,15 +8,15 @@ const Navbar = () => {
       <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
       <BootstrapNavbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <LinkContainer to="/">
-            <Nav.Link>Home</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/monito">
-            <Nav.Link>Monitor</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/player">
-            <Nav.Link>Player</Nav.Link>
-          </LinkContainer>
+          <Nav.Item>
+            <Nav.Link href="/">Home</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/monito">Monitor</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/player">Player</Nav.Link>
+          </Nav.Item>
         </Nav>
       </BootstrapNavbar.Collapse>
     </BootstrapNavbar>

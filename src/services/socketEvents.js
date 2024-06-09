@@ -14,52 +14,65 @@ const handleSocketEventsInGame = (setGameStarted) => {
   });
 };
 
-const handleSocketEventsGameScreen = (setAudioUrl, setIsPlaying, setBuzzingPlayer) => {
+const handleSocketEventsAudioPlayer = (setAudioUrl, setIsPlaying) => {
   socket.on("song", function(song) {
     console.log('Received song: ' + song.song.preview);
     setAudioUrl(song.song.preview);
     setIsPlaying(true);
   });
-    socket.on("song", function(song) {
-    console.log('Received song: ' + song.song.preview);
-    setAudioUrl(song.song.preview);
-    setIsPlaying(true);
-  });
-  socket.on("buzz", function(buzz){
-    console.log('Pausing game...');
-    setIsPlaying(false);
-    setBuzzingPlayer(buzz.player);
-  })
 
   socket.on("resume", function() {
     console.log('Resuming game...');
     setIsPlaying(true);
   });
     
-  // socket.on("users", function(data) {
-  //   var users = data.users;
-  //   var out = "";
-  //   for (var i = 0, l = users.length; i < l; i++) {
-  //     if (users[i].hasJoined) {
-  //       out +=
-  //         "<li>" + users[i].username + " (" + users[i].score + ")" + "</li>";
-  //     } else {
-  //       out += "<li>" + users[i].username + " (ready)" + "</li>";
-  //     }
-  //   }
-  //   $("#header").show()
-  //   $("#players").html(out);
-  // });
-  // socket.on("answer", function(username) {
-  //   if (username && username.username) {
-  //     App.showAnswer(username.username);
-  //   } else {
-  //     App.showAnswer();
-  //   }
-  // });
-  // socket.on("winner", function(winner) {
-  //   App.showWinner(winner);
-  // });
+    socket.on("buzz", function(buzz){
+    console.log('Pausing game...');
+    setIsPlaying(false);
+    });
 }
 
-export { handleSocketEventsPlaylistLoader, handleSocketEventsInGame , handleSocketEventsGameScreen};
+const handleSocketEventsUserList = (setUsersList) => {
+  socket.on("users", function(data) {
+    var users = data.users;
+    const outputList = [];
+    for (var i = 0, l = users.length; i < l; i++) {
+      if (users[i].hasJoined) {
+        outputList.push(users[i].username + " (" + users[i].score + ")");
+      } else {
+        outputList.push(users[i].username + " (ready)");
+      }
+    }
+    setUsersList(outputList);
+  });
+};
+
+const handleSocketEventsBuzzer = (setBuzzingPlayer) => {
+  socket.on("buzz", function(buzz){
+    console.log('Pausing game...');
+    setBuzzingPlayer(buzz.player);
+  })
+};
+
+const handleSocketEventsAnswer = (setOverlayState, setPlayerForOverlay) => {
+  socket.on("answer", function(username) {
+    console.log({username}+' has won the round.');
+    setOverlayState(true);
+    setPlayerForOverlay(username.username);
+  });
+
+  // socket.on("winner", function(winner) {
+  //   setOverlayState(true);
+  //   setPlayerForOverlay(winner);
+  // });
+};
+
+
+export { 
+  handleSocketEventsPlaylistLoader, 
+  handleSocketEventsInGame, 
+  handleSocketEventsAudioPlayer,
+  handleSocketEventsUserList,
+  handleSocketEventsBuzzer,
+  handleSocketEventsAnswer
+};

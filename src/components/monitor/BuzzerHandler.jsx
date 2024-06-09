@@ -5,14 +5,13 @@ import Col from 'react-bootstrap/Col';
 import socket from '../../services/socket';
 import Button from 'react-bootstrap/Button';
 
-import { handleSocketEventsGameScreen } from '../../services/socketEvents';
+import { handleSocketEventsBuzzer } from '../../services/socketEvents';
 
 const BuzzerHandler = () => {
   const [buzzingPlayer, setBuzzingPlayer] = useState(null); 
-  const [_, placeholderFunction] = useState(null); 
 
   useEffect(() => {
-    handleSocketEventsGameScreen(placeholderFunction, placeholderFunction, setBuzzingPlayer);
+    handleSocketEventsBuzzer(setBuzzingPlayer);
     return () => {
       socket.off('audioUrl');
       socket.off('isPlaying');

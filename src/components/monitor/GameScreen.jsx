@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import logo from '../../assets/pedro.gif';
 import AudioPlayer from './AudioPlayer';
 import BuzzerHandler from './BuzzerHandler'
+import PlayersFooter from './PlayersFooter';
+import AnswerFeedback from './AnswerFeedback';
 
 const GameScreen = () => {
   return (
@@ -23,6 +25,8 @@ const GameScreen = () => {
       </Row>
       <AudioPlayer/>
       <BuzzerHandler/>
+      <PlayersFooter/>
+      <AnswerFeedback/>
     </Container>
   );
 };

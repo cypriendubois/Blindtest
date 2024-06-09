@@ -19,16 +19,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 
-app.get("/", function(_req, res) {
+app.get("*", function(_req, res) {
   res.sendFile(__dirname + "/public/index.html");
-});
-
-app.get("/monito", function(_req, res) {
-  res.sendFile(__dirname + "/public/index.html");
-});
-
-app.get("/spectate", function(_req, res) {
-  res.redirect("/monitor/index.html");
 });
 
 Game.init(io);
