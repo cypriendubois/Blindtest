@@ -6,7 +6,8 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import ReactPlayer from 'react-player/lazy';
 import socket from '../../services/socket';
 
-import { handleSocketEventsAudioPlayer } from '../../services/socketEvents';
+import { handleSocketEventsAudioPlayer, handleSocketEventsAnswer } from '../../services/socketEvents';
+
 
 
 const AudioPlayer = () => {
@@ -14,9 +15,12 @@ const AudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0); // Duration of the audio snippet
   const [playedSeconds, setPlayedSeconds] = useState(0); // Played time in seconds
+  const [_, placeholder] = useState(0); 
+  
 
   useEffect(() => {
     handleSocketEventsAudioPlayer(setAudioUrl, setIsPlaying);
+    handleSocketEventsAnswer(placeholder,placeholder,setPlayedSeconds);
     return () => {
       socket.off('audioUrl');
       socket.off('isPlaying');
