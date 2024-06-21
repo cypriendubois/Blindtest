@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import socket from '../../services/socket';
 import {handleSocketEventsPlaylistLoader} from '../../services/socketEvents';
+import PlayersFooter from '../common/PlayersFooter';
 
 const PlaylistLoader = () => {
   const [playlistUrl, setPlaylistUrl] = useState('https://deezer.page.link/jgWCyForWLp2M8687');
@@ -58,6 +59,7 @@ const PlaylistLoader = () => {
           <Button variant="primary" onClick={handleStartGame} disabled={!playlistLoaded}>Start game</Button>{' '}
         </Col>
       </Row>
+      <PlayersFooter/>
     </Container>
   );
 };

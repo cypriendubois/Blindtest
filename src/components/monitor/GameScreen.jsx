@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import logo from '../../assets/pedro.gif';
 import AudioPlayer from './AudioPlayer';
 import BuzzerHandler from './BuzzerHandler'
-import PlayersFooter from './PlayersFooter';
+import PlayersFooter from '../common/PlayersFooter';
 import AnswerFeedback from './AnswerFeedback';
 
 const GameScreen = () => {
