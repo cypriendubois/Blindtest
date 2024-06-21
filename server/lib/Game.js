@@ -69,11 +69,11 @@ const Game = {
   newRound() {
     console.log("=================================================");
     console.log("New round!");
-    Game.io.sockets.in("game").emit("startGame");
     for (let i = 0; i < Game.users.length; i++) {
       Game.users[i].resetScore();
       Game.users[i].join();
     }
+    Game.io.sockets.in("game").emit("startGame");
     Game.nextSongFromIdList();
   },
 
@@ -100,13 +100,10 @@ const Game = {
   },
 
   // Handle manual check start
-  manualCheckStart(user, button) {
+  manualCheckStart(user) {
     this.currentUser = user;
-    console.log(button);
-    if (button === -1) {
-      console.log(`User ${user.getName()} buzzed.`);
-      Game.io.sockets.in("game").emit("buzz", { player: user.getName(), song: Game.currentSong.title });
-    }
+    console.log(`User ${user.getName()} buzzed.`);
+    Game.io.sockets.in("game").emit("buzz", { player: user.getName(), song: Game.currentSong.title });
   },
 
   // Resolve the buzzer decision
@@ -117,9 +114,6 @@ const Game = {
       this.currentUser.increase_score(Game.POINT_RIGHT_ANSWER);
       console.log(`${this.currentUser.getName()} increases their tally by ${Game.POINT_RIGHT_ANSWER}`);
       this.currentUser.isRight();
-      setTimeout(() => {
-        Game.nextSongFromIdList();
-      }, 5000);
     } else {
       this.currentUser.isWrong();
       console.log(`${this.currentUser.getName()} is wrong!`);
@@ -129,10 +123,7 @@ const Game = {
       Game.currentSongErrors++;
       if (Game.currentSongErrors >= Game.users.length - 1) {
         console.log("All users are wrong");
-        Game.io.sockets.in("game").emit("answer");
-        setTimeout(() => {
-          Game.nextSongFromIdList();
-        }, 10000);
+        Game.io.sockets.in("game").emit("answerWrong");
       }
     }
     this.currentUser = null;

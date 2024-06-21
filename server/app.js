@@ -2,25 +2,29 @@ const Game = require("./lib/Game");
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
-const cors = require('cors');
+const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:8080", // Client origin
+    origin: "http://localhost:8080",
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
-    credentials: true
-  }
+    credentials: true,
+  },
 });
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static("public"));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "../public")));
 
-app.get("*", function(_req, res) {
-  res.sendFile(__dirname + "/public/index.html");
+// Catch-all route to serve the React app's index.html
+app.get("*", (req, res) => {
+  console.log("Serving index.html for", req.url);
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
 Game.init(io);

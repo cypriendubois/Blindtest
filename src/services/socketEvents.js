@@ -54,17 +54,41 @@ const handleSocketEventsBuzzer = (setBuzzingPlayer) => {
   })
 };
 
-const handleSocketEventsAnswer = (setOverlayState, setPlayerForOverlay) => {
-  socket.on("answer", function(username) {
-    console.log({username}+' has won the round.');
+const handleSocketEventsAnswer = (setOverlayState, setOverlayText, setPlayedSeconds) => {
+  socket.on("answerRight", function(data) {
+    let usernameStr = String(data.username);
+    setOverlayText(usernameStr.concat(' guessed correctly!'));
+    setPlayedSeconds(0);
     setOverlayState(true);
-    setPlayerForOverlay(username.username);
+  });
+  socket.on("answerWrong", function() {
+    console.log('No one guessed.');
+    setPlayedSeconds(0);
+    setOverlayState(true);
+    setOverlayText('No one guessed.');
   });
 
   // socket.on("winner", function(winner) {
   //   setOverlayState(true);
   //   setPlayerForOverlay(winner);
   // });
+};
+
+const handleSocketEventsUser = (setUsername) =>{
+  socket.on("loginSuccess", function(data){
+    console.log(data.username + " was logged in the game.")
+    setUsername(data.username);
+  });
+};
+
+const handleSocketEventsBuzzerStatus = (setBuzzer) =>{
+  socket.on("disableBuzzers", function(){
+    setBuzzer(true);
+  });
+  socket.on("enableBuzzers", function(){
+    console.log('Received enable buzzer message')
+    setBuzzer(false);
+  });
 };
 
 
@@ -74,5 +98,7 @@ export {
   handleSocketEventsAudioPlayer,
   handleSocketEventsUserList,
   handleSocketEventsBuzzer,
-  handleSocketEventsAnswer
+  handleSocketEventsAnswer,
+  handleSocketEventsUser,
+  handleSocketEventsBuzzerStatus
 };

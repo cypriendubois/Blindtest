@@ -19,7 +19,7 @@ User.prototype.bindEvents = function() {
     if (!data.username) return;
     const username = sanitizer.escape(data.username);
     self.username = username;
-    self.socket.emit("login");
+    self.socket.emit("loginSuccess", {username:username});
     self.socket.join("players");
     self.game.updatePlayers();
     console.log(">>> " + username);
@@ -33,6 +33,7 @@ User.prototype.bindEvents = function() {
   // Monitor events
   this.socket.on("spectate", function() {
     self.socket.join("game");
+    console.log('Monitor is live');
     self.game.updatePlayers();
   });
 
@@ -47,7 +48,8 @@ User.prototype.bindEvents = function() {
   });
 
   this.socket.on("next", function() {
-    console.log("Requesting next song");
+    console.log("Requesting next song --");
+    self.game.io.sockets.in("game").emit("enableBuzzers");
     self.game.nextSongFromIdList();
   });
 
@@ -68,14 +70,14 @@ User.prototype.bindEvents = function() {
   });
 
   // Handle button press by a player
-  this.socket.on("button", function(data) {
+  this.socket.on("buzz", function(data) {
     if (self.locked || self.game.locked) return;
-    const button = parseInt(data.button, 10);
     self.lock();
     self.game.lock();
     self.game.io.sockets.in("game").emit("startTimer", { username: data.username });
-    self.game.manualCheckStart(self, button);
+    self.game.manualCheckStart(self);
   });
+
 };
 
 // Allow the user to join the game
@@ -109,9 +111,7 @@ User.prototype.isWrong = function() {
 
 // Notify the user and others if their answer is right
 User.prototype.isRight = function() {
-  this.socket.emit("answer", { username: this.username });
-  this.socket.broadcast.emit("answer", { username: this.username });
-  this.game.updatePlayers();
+  this.socket.in("game").emit("answerRight", { username: this.username });
 };
 
 // Notify the user and others if they are the winner
@@ -139,13 +139,13 @@ User.prototype.resetScore = function() {
 // Increase the user's score and notify them
 User.prototype.increase_score = function(points) {
   this.score += points;
-  this.socket.emit("score", { score: this.score });
+  this.game.updatePlayers();
 };
 
 // Decrease the user's score and notify them
 User.prototype.decrease_score = function(points) {
   this.score -= points;
-  this.socket.emit("score", { score: this.score });
+  this.game.updatePlayers();
 };
 
 module.exports = User;
