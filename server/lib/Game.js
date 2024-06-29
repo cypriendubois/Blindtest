@@ -4,7 +4,7 @@ const songUtils = require("./Songs");
 const Game = {
   io: null,
   MAX_USERS: 16,
-  MAX_SONGS: 3,
+  MAX_SONGS: 30,
   POINT_RIGHT_ANSWER: 10,
   POINT_PENALTY: 2,
   users: [],
