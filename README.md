@@ -28,12 +28,12 @@ TODO
 ----
 * Sugegst initial URL - may not be relevant
 * Allow in-game join/re-join
-* Allow game restart after 30 rounds
-* Improve scores live update on monitor
+* ~~Allow game restart after 30 rounds~~ - Done user should reload Monitor Page
+* ~~Improve scores live update on monitor~~ - Done
 * Playlist URL check before game can start
-* Buzzer queue (needed ?)
-* Progress bar for round
-* Leaderboard at the end of the game
+* ~~Buzzer queue (needed ?)~~ - Done
+* ~~Progress bar for round~~ - Done
+* ~~Leaderboard at the end of the game~~ - Done
 * CSS aesthetic work
 
 TODO - Original repo
