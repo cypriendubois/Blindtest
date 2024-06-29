@@ -4,9 +4,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import ReactPlayer from 'react-player/lazy';
-import socket from '../../services/socket';
+import socket from '../../../services/socket';
 
-import { handleSocketEventsAudioPlayer, handleSocketEventsAnswer } from '../../services/socketEvents';
+import { handleSocketEventsAudioPlayer, handleSocketEventsAnswer } from '../../../services/socketEvents';
 
 
 

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import socket from '../../services/socket';
+import socket from '../../../services/socket';
 
-import { handleSocketEventsAnswer } from '../../services/socketEvents';
+import { handleSocketEventsAnswer } from '../../../services/socketEvents';
 
 function AnswerFeedback() {
   const [modalShow, setOverlayState] = useState(false);

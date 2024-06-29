@@ -5,17 +5,28 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import logo from '../../assets/pedro.gif';
-import AudioPlayer from './AudioPlayer';
-import BuzzerHandler from './BuzzerHandler'
+import AudioPlayer from './gamescreen/AudioPlayer';
+import BuzzerHandler from './gamescreen/BuzzerHandler'
 import PlayersFooter from '../common/PlayersFooter';
-import AnswerFeedback from './AnswerFeedback';
+import AnswerFeedback from './gamescreen/AnswerFeedback';
+import { handleSocketSongCounter } from '../../services/socketEvents';
 
 const GameScreen = () => {
+  const [songNumber, setSongNumber] = useState(0);
+  const [maxSongs, setMaxSong] = useState(0);
+   
+
+  useEffect(() => {
+    handleSocketSongCounter(setSongNumber, setMaxSong);
+    return
+  }, []);
+
+
   return (
     <Container>
       <Row>
         <Col className="text-center">
-          <h1>Game Screen</h1>
+          <h1>Song {songNumber}/{maxSongs}</h1>
         </Col>
       </Row>
       <Row>
