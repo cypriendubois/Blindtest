@@ -96,7 +96,7 @@ const handleSocketEventsUser = (setUsername) =>{
 };
 
 const handleSocketEventsBuzzerStatus = (setBuzzer) =>{
-  socket.on("disableBuzzers", function(){
+  socket.on("answerRight", function(){
     setBuzzer(true);
   });
   socket.on("enableBuzzers", function(){
