@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import PreGameScreen from '../components/player/PreGameScreen';
 import PlayersFooter from '../components/common/PlayersFooter';
 import PlayerGameScreen from '../components/player/PlayerGameScreen';
-import {handleSocketEventsInGame, handleSocketEventsUser} from '../services/socketEvents';
+import {handleSocketEventsGame, handleSocketEventsUser} from '../services/socketEvents';
 
 const PlayerPage = () => {
 
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameFinished, setGameFinished] = useState(false);
   const [username, setUsername] = useState('');
+  const [_, placeholder] = useState(false);
+  
   useEffect(() => {
-    handleSocketEventsInGame(setGameStarted);
+    handleSocketEventsGame(setGameStarted, setGameFinished, placeholder);
     handleSocketEventsUser(setUsername);
-
     return () => {
     };
   }, []);

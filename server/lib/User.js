@@ -35,6 +35,7 @@ User.prototype.bindEvents = function() {
     self.socket.join("game");
     console.log('Monitor is live');
     self.game.updatePlayers();
+    self.game.resetGame();
   });
 
   this.socket.on("loadPlaylist", async (data) => {
@@ -60,22 +61,19 @@ User.prototype.bindEvents = function() {
     self.game.manualCheckResolve(buzzerDecision);
   });
 
-  this.socket.on("answerTimeout", function(data) {
-    const user = data.user;
-    console.log("Resuming music and removing points if relevant for " + user);
-    if (self.game.currentUser && user == self.game.currentUser.username) {
+  this.socket.on("answerTimeout", function() {
       self.game.manualCheckResolve(0);
-      self.game.io.sockets.in("game").emit("resume");
-    }
   });
 
   // Handle button press by a player
   this.socket.on("buzz", function(data) {
-    if (self.locked || self.game.locked) return;
+    if (self.locked) return;
     self.lock();
-    self.game.lock();
     self.game.io.sockets.in("game").emit("startTimer", { username: data.username });
-    self.game.manualCheckStart(self);
+    self.game.addSelfToCheckList(self);
+    if (self.game.buzzerList.length == 1){
+      self.game.manualCheckStart(self);
+    }
   });
 
 };

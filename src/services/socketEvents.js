@@ -7,17 +7,29 @@ const handleSocketEventsPlaylistLoader = (setPlaylistLoaded) => {
   });
 };
 
-const handleSocketEventsInGame = (setGameStarted) => {
+const handleSocketEventsGame = (setGameStarted, setGameFinished, setUsers) => {
   socket.on('startGame', () => {
     console.log('Game starting');
     setGameStarted(true);
   });
+  socket.on('showResults', (data) => {
+    console.log('Game ended');
+    setGameFinished(true);
+    setUsers(data.users);
+  });
+};
+
+const handleSocketSongCounter = (setSongNumber, setMaxSong) => {
+  socket.on('song', function(data) {
+    setSongNumber(data.songNumber);
+    setMaxSong(data.maxSongs);
+  });
 };
 
 const handleSocketEventsAudioPlayer = (setAudioUrl, setIsPlaying) => {
-  socket.on("song", function(song) {
-    console.log('Received song: ' + song.song.preview);
-    setAudioUrl(song.song.preview);
+  socket.on("song", function(data) {
+    console.log('Received song: ' + data.song.preview);
+    setAudioUrl(data.song.preview);
     setIsPlaying(true);
   });
 
@@ -27,7 +39,6 @@ const handleSocketEventsAudioPlayer = (setAudioUrl, setIsPlaying) => {
   });
     
     socket.on("buzz", function(buzz){
-    console.log('Pausing game...');
     setIsPlaying(false);
     });
 }
@@ -51,7 +62,10 @@ const handleSocketEventsBuzzer = (setBuzzingPlayer) => {
   socket.on("buzz", function(buzz){
     console.log('Pausing game...');
     setBuzzingPlayer(buzz.player);
-  })
+  });
+  socket.on("resume", function(){
+    setBuzzingPlayer(null);
+  });
 };
 
 const handleSocketEventsAnswer = (setOverlayState, setOverlayText, setPlayedSeconds) => {
@@ -94,7 +108,8 @@ const handleSocketEventsBuzzerStatus = (setBuzzer) =>{
 
 export { 
   handleSocketEventsPlaylistLoader, 
-  handleSocketEventsInGame, 
+  handleSocketEventsGame, 
+  handleSocketSongCounter,
   handleSocketEventsAudioPlayer,
   handleSocketEventsUserList,
   handleSocketEventsBuzzer,

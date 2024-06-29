@@ -8,10 +8,10 @@ const Game = {
   POINT_RIGHT_ANSWER: 10,
   POINT_PENALTY: 2,
   users: [],
-  round: null,
   song_id_list: [],
   currentSong: null,
   currentUser: null,
+  buzzerList: [],
   songCounter: 0,
   locked: false,
 
@@ -20,6 +20,10 @@ const Game = {
     Game.io = io;
     console.log("Launching...");
     Game.waitForUsers();
+  },
+  
+  resetGame(){
+    Game.songCounter = 0;
   },
 
   // Wait for users to connect
@@ -67,7 +71,6 @@ const Game = {
 
   // Start a new round of the game
   newRound() {
-    console.log("=================================================");
     console.log("New round!");
     for (let i = 0; i < Game.users.length; i++) {
       Game.users[i].resetScore();
@@ -80,11 +83,10 @@ const Game = {
   // Move to the next song in the list
   nextSongFromIdList() {
     if (Game.songCounter === Game.MAX_SONGS) {
-      setTimeout(() => {
-        Game.newRound();
-      }, 10000);
+      Game.showGameRecap();
       return;
     }
+    Game.buzzerList = [],
     songUtils.getTrackFromID(Game.song_id_list[0], (data) => {
       const song = data;
       Game.currentSong = song;
@@ -95,15 +97,26 @@ const Game = {
       for (let i = 0; i < Game.users.length; i++) {
         Game.users[i].unlock();
       }
-      Game.io.sockets.in("game").emit("song", { song });
+      Game.io.sockets.in("game").emit("song", { 
+        song:song,
+        songNumber: this.songCounter,
+        maxSongs: this.MAX_SONGS
+      });
     });
   },
 
   // Handle manual check start
-  manualCheckStart(user) {
-    this.currentUser = user;
+  addSelfToCheckList(user) {
     console.log(`User ${user.getName()} buzzed.`);
-    Game.io.sockets.in("game").emit("buzz", { player: user.getName(), song: Game.currentSong.title });
+    Game.buzzerList.push(user);
+  },
+  
+  manualCheckStart() {
+    if (this.locked) return;
+    this.lock();
+    this.currentUser = Game.buzzerList.pop();
+    console.log(`Handling user ${this.currentUser.getName()}`);
+    Game.io.sockets.in("game").emit("buzz", { player: this.currentUser.getName(), song: Game.currentSong.title });
   },
 
   // Resolve the buzzer decision
@@ -115,12 +128,18 @@ const Game = {
       console.log(`${this.currentUser.getName()} increases their tally by ${Game.POINT_RIGHT_ANSWER}`);
       this.currentUser.isRight();
     } else {
-      this.currentUser.isWrong();
       console.log(`${this.currentUser.getName()} is wrong!`);
       this.currentUser.decrease_score(Game.POINT_PENALTY);
       console.log(`${this.currentUser.getName()} decreases their tally by ${Game.POINT_PENALTY}`);
-      Game.io.sockets.in("game").emit("resume");
       Game.currentSongErrors++;
+      if (this.buzzerList.length>0) {
+        this.unlock();
+        this.manualCheckStart();
+        return;
+      } else {
+        Game.io.sockets.in("game").emit("resume");
+      }
+      this.currentUser.isWrong();
       if (Game.currentSongErrors >= Game.users.length - 1) {
         console.log("All users are wrong");
         Game.io.sockets.in("game").emit("answerWrong");
@@ -132,20 +151,25 @@ const Game = {
 
   // Update the list of players and emit the update
   updatePlayers() {
-    const users = [];
-    for (let i = 0; i < Game.users.length; i++) {
-      if (Game.users[i].getName() === "") {
-        continue;
-      }
-      users.push({
-        username: Game.users[i].getName(),
-        score: Game.users[i].getScore(),
-        hasJoined: Game.users[i].hasJoined,
+    const users = Game.users.filter(item=>item.getName() != "").map(item => {
+        return { username: item.getName(), score: item.getScore(), hasJoined: item.hasJoined};
       });
-    }
-    Game.io.sockets.in("game").emit("users", { users });
+    Game.io.sockets.in("game").emit("users", {users});
   },
   
+  showGameRecap() {
+    console.log("=================================================");
+    console.log("Game Over!");
+    Game.users.sort((a, b) => {
+      return a.score - b.score;
+    });
+    const users = Game.users.filter(item=>item.getName() != "").map(item => {
+        return { username: item.getName(), score: item.getScore()};
+      });
+    Game.io.sockets.in("game").emit("showResults", {users});
+    return
+  },
+
   lock() {
     this.locked = true;
   },
